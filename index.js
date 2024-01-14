@@ -67,7 +67,14 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-    response.json(`Phonebook has info for ${persons.length} people`)
+    var currentdate = new Date(); 
+    var datetime = "Called on: " + currentdate.getDate() + "/"
+                    + (currentdate.getMonth()+1)  + "/" 
+                    + currentdate.getFullYear() + " @ "  
+                    + currentdate.getHours() + ":"  
+                    + currentdate.getMinutes() + ":" 
+                    + currentdate.getSeconds();
+    response.send(`Phonebook has info for ${persons.length} people <br/> ${datetime}`)
 })
 
 const PORT = 3001
