@@ -48,6 +48,11 @@ app.get('/api/persons/:id', (request, response) => {
     }
 })
 
+function sendErr(errMsg, response){
+    console.log(errMsg);
+    response.status(400).send({error: errMsg});
+}
+
 app.post('/api/persons', (request, response) => {
     // const maxId = persons.length > 0
     // ? Math.max(...persons.map(p => p.id)) 
@@ -59,10 +64,19 @@ app.post('/api/persons', (request, response) => {
     // person.id = maxId + 1
 
     // error handling
-    if (!person.name) response.status(400).send({error: 'No name provided'});
-    if (!person.number) response.status(400).send({error: 'No number provided'});
+    if (!person.name) {
+        sendErr('No name provided', response);
+        return;
+    }
+    if (!person.number) {
+        sendErr('No number provided', response)
+        return;
+    }
     let dupePerson = persons.find(p=> p.name===person.name);
-    if (dupePerson) response.status(400).send({error: 'Name already provided'});
+    if (dupePerson) {
+        sendErr('Name already provided', response)
+        return;
+    }
     persons = persons.concat(person);
     response.json(person)
 })
