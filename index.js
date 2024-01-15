@@ -3,6 +3,9 @@ const app = express()
 
 app.use(express.json())
 
+const morgan = require('morgan');
+morgan('tiny');
+
 let persons = [
     { 
       "id": 1,
@@ -56,19 +59,10 @@ app.post('/api/persons', (request, response) => {
     // person.id = maxId + 1
 
     // error handling
-    if (!person.name){
-        response.status(400);
-        response.send('Error: no name provided');
-    }
-    if (!person.number){
-        response.status(400);
-        response.send('Error: no number provided');
-    }
+    if (!person.name) response.status(400).send({error: 'No name provided'});
+    if (!person.number) response.status(400).send({error: 'No number provided'});
     let dupePerson = persons.find(p=> p.name===person.name);
-    if (dupePerson){
-        response.status(400);
-        response.send('Error: Name already provided');
-    }
+    if (dupePerson) response.status(400).send({error: 'Name already provided'});
     persons = persons.concat(person);
     response.json(person)
 })
