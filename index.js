@@ -1,10 +1,16 @@
 const express = require('express')
+// cors mechanism is necessary to communicate w/ apps running on a different port/url
+const cors = require('cors')
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 
 const morgan = require('morgan');
-morgan('tiny');
+
+morgan.token('body', (req)=> JSON.stringify(req.body))
+// app.use(morgan('tiny'));
+app.use(morgan(':url :method :body'))
 
 let persons = [
     { 
@@ -48,12 +54,13 @@ app.get('/api/persons/:id', (request, response) => {
     }
 })
 
-function sendErr(errMsg, response){
+function sendErr(errMsg, response, body){
     console.log(errMsg);
     response.status(400).send({error: errMsg});
 }
 
 app.post('/api/persons', (request, response) => {
+    const body = request.body;
     // const maxId = persons.length > 0
     // ? Math.max(...persons.map(p => p.id)) 
     // : 0
@@ -65,16 +72,16 @@ app.post('/api/persons', (request, response) => {
 
     // error handling
     if (!person.name) {
-        sendErr('No name provided', response);
+        sendErr('No name provided', response, body);
         return;
     }
     if (!person.number) {
-        sendErr('No number provided', response)
+        sendErr('No number provided', response, body)
         return;
     }
     let dupePerson = persons.find(p=> p.name===person.name);
     if (dupePerson) {
-        sendErr('Name already provided', response)
+        sendErr('Name already provided', response, body)
         return;
     }
     persons = persons.concat(person);
