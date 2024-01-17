@@ -1,7 +1,8 @@
-POST http://localhost:3001/api/persons
+# POST http://localhost:3001/api/persons
+POST https://phonebook-1s9x.onrender.com/api/persons
 Content-Type: application/json
 
 {
-    "name": "asdf",
+    "name": "test2",
     "number": "246810"
 }
