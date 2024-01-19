@@ -8,7 +8,7 @@ if (process.argv.length<3) {
 
 const password = process.argv[2]
 // must update this url based on which cluster connecting to
-const url = `mongodb+srv://testUser:${password}>@cluster0.zjvlpvz.mongodb.net/?retryWrites=true&w=majority`
+const url = `mongodb+srv://justinlieu06:${password}@cluster0.i35aru0.mongodb.net/?retryWrites=true&w=majority`
 
 mongoose.set('strictQuery',false)
 mongoose.connect(url)
@@ -22,7 +22,7 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model('Person', personSchema)
 
 const person = new Person({
-  name: 'Mongo Test',
+  name: 'Mongo Test2',
   number: '17459814820',
 })
 
