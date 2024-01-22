@@ -13,22 +13,32 @@ const url = `mongodb+srv://justinlieu06:${password}@cluster0.i35aru0.mongodb.net
 mongoose.set('strictQuery',false)
 mongoose.connect(url)
 
-// create schema
-const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-})
 
-const Person = mongoose.model('Person', personSchema)
+/* For creating a new person */
+// // create schema
+// const personSchema = new mongoose.Schema({
+//   name: String,
+//   number: String,
+// })
 
-const person = new Person({
-  name: 'Mongo Test2',
-  number: '17459814820',
-})
+// const Person = mongoose.model('Person', personSchema)
 
-// save to schema
-person.save().then(result => {
-  console.log('person saved!')
-  mongoose.connection.close()
-})
+// const person = new Person({
+//   name: 'Mongo Test2',
+//   number: '17459814820',
+// })
+
+// // save to schema
+// person.save().then(result => {
+// //   console.log(result); // uninteresting for saving one obj
+//   console.log('person saved!')
+//   mongoose.connection.close()
+// })
+
+Person.find({}).then(result => {
+    result.forEach(pereson => {
+      console.log(person)
+    })
+    mongoose.connection.close()
+  })
 
