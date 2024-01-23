@@ -15,7 +15,6 @@ const url = `mongodb+srv://justinlieu06:${password}@cluster0.i35aru0.mongodb.net
 mongoose.set('strictQuery',false)
 mongoose.connect(url)
 
-
 // create schema
 const personSchema = new mongoose.Schema({
   name: String,
