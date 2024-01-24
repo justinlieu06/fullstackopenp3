@@ -5,6 +5,7 @@ const app = express()
 const mongoose = require('mongoose')
 
 const password = process.argv[2]
+console.log('password: ',password)
 
 app.use(cors())
 app.use(express.json())
@@ -17,25 +18,17 @@ morgan.token('body', (req)=> JSON.stringify(req.body))
 app.use(morgan(':url :method :body'))
 
 const url = `mongodb+srv://justinlieu06:${password}@cluster0.i35aru0.mongodb.net/?retryWrites=true&w=majority`
-mongoose.set('strictQuery',false)
-mongoose.connect(url)
-
-// create schema
-const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-})
 
 // change configurable options of schema as frontend assumes that every obj has unique id
-personSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-      returnedObject.id = returnedObject._id.toString()
-      delete returnedObject._id
-      delete returnedObject.__v
-    }
-  })
+// personSchema.set('toJSON', {
+//     transform: (document, returnedObject) => {
+//       returnedObject.id = returnedObject._id.toString()
+//       delete returnedObject._id
+//       delete returnedObject.__v
+//     }
+//   })
 
-const Person = mongoose.model('Person', personSchema)
+// const Person = mongoose.model('Person', personSchema)
 
 let persons = [
     { 
