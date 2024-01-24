@@ -2,10 +2,11 @@ const express = require('express')
 // cors mechanism is necessary to communicate w/ apps running on a different port/url
 const cors = require('cors')
 const app = express()
-const mongoose = require('mongoose')
+const Person = require('./models/person')
+require('dotenv').config()
 
-const password = process.argv[2]
-console.log('password: ',password)
+// const password = process.argv[2]
+// console.log('password: ',password)
 
 app.use(cors())
 app.use(express.json())
@@ -14,21 +15,9 @@ app.use(express.static('dist'))
 const morgan = require('morgan');
 
 morgan.token('body', (req)=> JSON.stringify(req.body))
+
 // app.use(morgan('tiny'));
 app.use(morgan(':url :method :body'))
-
-const url = `mongodb+srv://justinlieu06:${password}@cluster0.i35aru0.mongodb.net/?retryWrites=true&w=majority`
-
-// change configurable options of schema as frontend assumes that every obj has unique id
-// personSchema.set('toJSON', {
-//     transform: (document, returnedObject) => {
-//       returnedObject.id = returnedObject._id.toString()
-//       delete returnedObject._id
-//       delete returnedObject.__v
-//     }
-//   })
-
-// const Person = mongoose.model('Person', personSchema)
 
 let persons = [
     { 
@@ -129,7 +118,9 @@ app.get('/info', (request, response) => {
     response.send(`Phonebook has info for ${persons.length} people <br/> ${datetime}`)
 })
 
-const PORT = process.env.PORT || 3001
+// const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
