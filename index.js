@@ -71,31 +71,34 @@ function sendErr(errMsg, response, body){
 
 app.post('/api/persons', (request, response) => {
     const body = request.body;
-    // const maxId = persons.length > 0
-    // ? Math.max(...persons.map(p => p.id)) 
-    // : 0
     const randomId = Math.floor(Math.random() * 100000);
 
-    const person = request.body
+    const person = new Person({
+        name: body.name,
+        number: body.number
+    })
     person.id = randomId;
-    // person.id = maxId + 1
 
     // error handling
     if (!person.name) {
-        sendErr('No name provided', response, body);
+        sendErr('No name provided', response, body)
         return;
     }
     if (!person.number) {
         sendErr('No number provided', response, body)
         return;
     }
-    let dupePerson = persons.find(p=> p.name===person.name);
+    let dupePerson = persons.find(p=> p.name===person.name)
     if (dupePerson) {
         sendErr('Name already provided', response, body)
         return;
     }
-    persons = persons.concat(person);
-    response.json(person)
+    // persons = persons.concat(person)
+    // response.json(person)
+
+    person.save().then(savedPerson => {
+      response.json(savedPerson)
+    })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
