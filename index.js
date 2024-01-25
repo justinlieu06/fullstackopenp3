@@ -54,14 +54,18 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
+    // const id = Number(request.params.id)
+    // const person = persons.find(person => person.id === id)
 
-    if (person) {
+    // if (person) {
+    //     response.json(person)
+    // } else {
+    //     response.status(404).end()
+    // }
+
+    Person.findById(request.params.id).then(person=> {
         response.json(person)
-    } else {
-        response.status(404).end()
-    }
+    })
 })
 
 function sendErr(errMsg, response, body){
@@ -103,15 +107,11 @@ app.post('/api/persons', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
     const personId = Number(request.params.id)
-    // persons = persons.filter(person => person.id !== personId)
+    persons = persons.filter(person => person.id !== personId)
 
     // Upon a success, 204 is returned
     // Apps either return 204 or 404 upon a fail. Let's just return 204 to keep it simple
-    // response.status(204).end()
-
-    Person.findById(personId).then(person=> {
-        response.json(person)
-    })
+    response.status(204).end()
 })
 
 app.get('/info', (request, response) => {
