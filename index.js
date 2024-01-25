@@ -1,9 +1,9 @@
 const express = require('express')
+require('dotenv').config()
 // cors mechanism is necessary to communicate w/ apps running on a different port/url
 const cors = require('cors')
 const app = express()
 const Person = require('./models/person')
-require('dotenv').config()
 
 // const password = process.argv[2]
 // console.log('password: ',password)
