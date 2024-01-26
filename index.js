@@ -44,7 +44,7 @@ let persons = [
 
 app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
-  })
+})
   
 app.get('/api/persons', (request, response) => {
     // response.json(persons)
@@ -53,7 +53,28 @@ app.get('/api/persons', (request, response) => {
     })
 })
 
-app.get('/api/persons/:id', (request, response) => {
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+    
+// handler of requests with unknown endpoint
+app.use(unknownEndpoint)
+    
+  
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    } 
+  
+    next(error)
+}
+    
+// this has to be the last loaded middleware.
+app.use(errorHandler)
+
+app.get('/api/persons/:id', (request, response, next) => {
     // const id = Number(request.params.id)
     // const person = persons.find(person => person.id === id)
 
@@ -70,10 +91,7 @@ app.get('/api/persons/:id', (request, response) => {
             response.status(404).end()
         }
     })
-    .catch(error => {
-        console.log(error)
-        response.status(400).send({ error: 'malformatted id' })
-    })
+    .catch(error => next(error))
 })
 
 function sendErr(errMsg, response, body){
