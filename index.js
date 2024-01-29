@@ -59,7 +59,6 @@ const unknownEndpoint = (request, response) => {
     
 // handler of requests with unknown endpoint
 app.use(unknownEndpoint)
-    
   
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
@@ -98,6 +97,8 @@ function sendErr(errMsg, response, body){
     console.log(errMsg);
     response.status(400).send({error: errMsg});
 }
+
+app.use(requestLogger) // request.body is undefined!
 
 app.post('/api/persons', (request, response) => {
     const body = request.body;
