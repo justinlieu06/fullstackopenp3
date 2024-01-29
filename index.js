@@ -132,12 +132,18 @@ app.post('/api/persons', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const personId = Number(request.params.id)
-    persons = persons.filter(person => person.id !== personId)
+    // const personId = Number(request.params.id)
+    // persons = persons.filter(person => person.id !== personId)
 
-    // Upon a success, 204 is returned
-    // Apps either return 204 or 404 upon a fail. Let's just return 204 to keep it simple
-    response.status(204).end()
+    // // Upon a success, 204 is returned
+    // // Apps either return 204 or 404 upon a fail. Let's just return 204 to keep it simple
+    // response.status(204).end()
+
+    Person.findByIdAndDelete(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 app.get('/info', (request, response) => {
