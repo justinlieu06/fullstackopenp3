@@ -3,6 +3,6 @@ POST https://phonebook-1s9x.onrender.com/api/persons
 Content-Type: application/json
 
 {
-    "name": "test2",
+    "name": "jan31",
     "number": "246810"
 }
