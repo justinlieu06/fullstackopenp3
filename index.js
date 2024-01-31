@@ -4,20 +4,47 @@ require('dotenv').config()
 const cors = require('cors')
 const app = express()
 const Person = require('./models/person')
+const morgan = require('morgan');
 
 // const password = process.argv[2]
 // console.log('password: ',password)
-
-app.use(cors())
-app.use(express.json())
-app.use(express.static('dist'))
-
-const morgan = require('morgan');
 
 morgan.token('body', (req)=> JSON.stringify(req.body))
 
 // app.use(morgan('tiny'));
 app.use(morgan(':url :method :body'))
+
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:  ', request.path)
+    console.log('Body:  ', request.body)
+    console.log('---')
+    next()
+}
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+  
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    } 
+  
+    next(error)
+}
+
+// function sendErr(errMsg, response, body){
+//     console.log(errMsg);
+//     response.status(400).send({error: errMsg});
+// }
+
+app.use(cors())
+app.use(requestLogger) // request.body is undefined!
+app.use(express.json())
+app.use(express.static('dist'))
 
 let persons = [
     { 
@@ -53,20 +80,6 @@ app.get('/api/persons', (request, response) => {
     })
 })
 
-const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
-}
-  
-const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
-  
-    if (error.name === 'CastError') {
-      return response.status(400).send({ error: 'malformatted id' })
-    } 
-  
-    next(error)
-}
-
 app.get('/api/persons/:id', (request, response, next) => {
     // const id = Number(request.params.id)
     // const person = persons.find(person => person.id === id)
@@ -88,12 +101,7 @@ app.get('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-function sendErr(errMsg, response, body){
-    console.log(errMsg);
-    response.status(400).send({error: errMsg});
-}
 
-// app.use(requestLogger) // request.body is undefined!
 
 app.post('/api/persons', (request, response) => {
     const body = request.body;
