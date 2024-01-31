@@ -56,9 +56,6 @@ app.get('/api/persons', (request, response) => {
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
-    
-// handler of requests with unknown endpoint
-app.use(unknownEndpoint)
   
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
@@ -69,9 +66,6 @@ const errorHandler = (error, request, response, next) => {
   
     next(error)
 }
-    
-// this has to be the last loaded middleware.
-app.use(errorHandler)
 
 app.get('/api/persons/:id', (request, response, next) => {
     // const id = Number(request.params.id)
@@ -82,7 +76,8 @@ app.get('/api/persons/:id', (request, response, next) => {
     // } else {
     //     response.status(404).end()
     // }
-
+    console.log(request.params)
+    console.log(request.params.id)
     Person.findById(request.params.id).then(person=> {
         if (person){
             response.json(person)
@@ -105,6 +100,7 @@ app.post('/api/persons', (request, response) => {
     if (body.content === undefined) {
         return response.status(400).json({ error: 'content missing' })
     }
+    console.log(body)
     const person = new Person({
         name: body.name,
         number: body.number
@@ -150,20 +146,20 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 // update persons
-app.put('/api/persons/:id', (request, response, next) => {
-    const body = request.body
+// app.put('/api/persons/:id', (request, response, next) => {
+//     const body = request.body
 
-    const person = {
-        name: body.name,
-        number: body.number
-    }
+//     const person = {
+//         name: body.name,
+//         number: body.number
+//     }
 
-    Person.findByIdAndUpdate(request.params.id, person, { new: true })
-        .then(updatedPerson => {
-        response.json(updatedPerson)
-        })
-        .catch(error => next(error))
-})
+//     Person.findByIdAndUpdate(request.params.id, person, { new: true })
+//         .then(updatedPerson => {
+//         response.json(updatedPerson)
+//         })
+//         .catch(error => next(error))
+// })
 
 app.get('/info', (request, response) => {
     var currentdate = new Date(); 
@@ -176,9 +172,13 @@ app.get('/info', (request, response) => {
     response.send(`Phonebook has info for ${persons.length} people <br/> ${datetime}`)
 })
 
+// handler of requests with unknown endpoint
+app.use(unknownEndpoint)
+// this has to be the last loaded middleware.
+app.use(errorHandler)
+
 // const PORT = process.env.PORT || 3001
 const PORT = process.env.PORT
-
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
