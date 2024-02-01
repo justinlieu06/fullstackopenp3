@@ -123,11 +123,17 @@ app.post('/api/persons', (request, response) => {
     //     sendErr('No number provided', response, body)
     //     return;
     // }
-    // let dupePerson = persons.find(p=> p.name===person.name)
-    // if (dupePerson) {
-    //     sendErr('Name already provided', response, body)
-    //     return;
-    // }
+    let dupePerson = persons.find(p=> p.name===person.name)
+    // update the entry if the same name is provided
+    if (dupePerson) {
+        // sendErr('Name already provided', response, body)
+        Person.findByIdAndUpdate(request.params.id, person, { new: true })
+            .then(updatedPerson => {
+            response.json(updatedPerson)
+            })
+            .catch(error => next(error))
+        return;
+    }
     // persons = persons.concat(person)
     // response.json(person)
 
@@ -152,20 +158,20 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 // update persons
-// app.put('/api/persons/:id', (request, response, next) => {
-//     const body = request.body
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
 
-//     const person = {
-//         name: body.name,
-//         number: body.number
-//     }
+    const person = {
+        name: body.name,
+        number: body.number
+    }
 
-//     Person.findByIdAndUpdate(request.params.id, person, { new: true })
-//         .then(updatedPerson => {
-//         response.json(updatedPerson)
-//         })
-//         .catch(error => next(error))
-// })
+    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+        .then(updatedPerson => {
+        response.json(updatedPerson)
+        })
+        .catch(error => next(error))
+})
 
 app.get('/info', (request, response) => {
     var currentdate = new Date(); 
