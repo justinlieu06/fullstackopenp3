@@ -181,7 +181,10 @@ app.get('/info', (request, response) => {
                     + currentdate.getHours() + ":"  
                     + currentdate.getMinutes() + ":" 
                     + currentdate.getSeconds();
-    response.send(`Phonebook has info for ${persons.length} people <br/> ${datetime}`)
+    Person.find({}).then(persons=> {
+        let personsLength = persons.length
+        response.send(`Phonebook has info for ${personsLength} people <br/> ${datetime}`)
+    })
 })
 
 // handler of requests with unknown endpoint
