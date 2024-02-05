@@ -124,20 +124,26 @@ app.post('/api/persons', (request, response) => {
     //     sendErr('No number provided', response, body)
     //     return;
     // }
-    let dupePerson = persons.find(p=> p.name===person.name)
+
+    // let dupePerson = persons.find(p=> p.name===person.name)
     // update the entry if the same name is provided
-    if (dupePerson) {
-        // sendErr('Name already provided', response, body)
-        updatePerson(person.name, person.number)
-        return;
-    }
-    // persons = persons.concat(person)
-    // response.json(person)
+    // if (dupePerson) {
+    //     // sendErr('Name already provided', response, body)
+    //     // updatePerson(request, person.name, person.number)
+    //     Person.findByIdAndUpdate(request.params.id, {name, number}, { new: true, runValidators: true, context: 'query' })
+    //     .then(updatedPerson => {
+    //     response.json(updatedPerson)
+    //     })
+    //     .catch(error => next(error))
+    //     return;
+    // }
+    // // persons = persons.concat(person)
+    // // response.json(person)
 
     person.save().then(savedPerson => {
       response.json(savedPerson)
     })
-    .catch(error => next(error))
+    // .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -159,7 +165,12 @@ app.delete('/api/persons/:id', (request, response) => {
 app.put('/api/persons/:id', (request, response, next) => {
     const {name, number} = request.body
 
-    updatePerson(name, number)
+    // updatePerson(request, person.name, person.number)
+    Person.findByIdAndUpdate(request.params.id, {name, number}, { new: true, runValidators: true, context: 'query' })
+        .then(updatedPerson => {
+        response.json(updatedPerson)
+        })
+        .catch(error => next(error))
 })
 
 app.get('/info', (request, response) => {
@@ -176,7 +187,7 @@ app.get('/info', (request, response) => {
     })
 })
 
-function updatePerson(name, number){
+const updatePerson = (request, name, number) => {
     Person.findByIdAndUpdate(request.params.id, {name, number}, { new: true, runValidators: true, context: 'query' })
         .then(updatedPerson => {
         response.json(updatedPerson)
