@@ -106,7 +106,6 @@ app.post('/api/persons', (request, response) => {
     if (body.name === undefined) {
         return response.status(400).json({ error: 'content missing' })
     }
-    console.log(body)
     const person = new Person({
         name: body.name,
         number: body.number
