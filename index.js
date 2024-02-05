@@ -128,11 +128,7 @@ app.post('/api/persons', (request, response) => {
     // update the entry if the same name is provided
     if (dupePerson) {
         // sendErr('Name already provided', response, body)
-        Person.findByIdAndUpdate(request.params.id, person, { new: true })
-            .then(updatedPerson => {
-            response.json(updatedPerson)
-            })
-            .catch(error => next(error))
+        updatePerson(person.name, person.number)
         return;
     }
     // persons = persons.concat(person)
@@ -161,18 +157,9 @@ app.delete('/api/persons/:id', (request, response) => {
 
 // update persons
 app.put('/api/persons/:id', (request, response, next) => {
-    const body = request.body
+    const {name, number} = request.body
 
-    const person = {
-        name: body.name,
-        number: body.number
-    }
-
-    Person.findByIdAndUpdate(request.params.id, person, { new: true })
-        .then(updatedPerson => {
-        response.json(updatedPerson)
-        })
-        .catch(error => next(error))
+    updatePerson(name, number)
 })
 
 app.get('/info', (request, response) => {
@@ -188,6 +175,14 @@ app.get('/info', (request, response) => {
         response.send(`Phonebook has info for ${personsLength} people <br/> ${datetime}`)
     })
 })
+
+function updatePerson(name, number){
+    Person.findByIdAndUpdate(request.params.id, {name, number}, { new: true, runValidators: true, context: 'query' })
+        .then(updatedPerson => {
+        response.json(updatedPerson)
+        })
+        .catch(error => next(error))
+}
 
 // handler of requests with unknown endpoint
 app.use(unknownEndpoint)
