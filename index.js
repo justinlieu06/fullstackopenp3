@@ -101,8 +101,6 @@ app.get('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-
-
 app.post('/api/persons', (request, response) => {
     const body = request.body;
     if (body.name === undefined) {
@@ -143,7 +141,7 @@ app.post('/api/persons', (request, response) => {
     person.save().then(savedPerson => {
       response.json(savedPerson)
     })
-    .catch(error => next(error))
+    .catch(error => error.response.data.error)
 })
 
 app.delete('/api/persons/:id', (request, response) => {
