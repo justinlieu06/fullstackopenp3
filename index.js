@@ -69,22 +69,18 @@ app.get('/api/persons/:id', (request, response, next) => {
     //     response.status(404).end()
     // }
     Person.findById(request.params.id).then(person => {
-        if (person){
-            response.json(person)
-        } else {
-            response.status(404).end()
-        }
+        response.json(person)
     }).catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
-    const body = request.body
-    if (body.name === undefined) {
-        return response.status(400).json({ error: 'content missing' })
+app.post('/api/persons', (request, response, next) => {
+    const { name, number } = request.body
+    if (!name) {
+        return response.status(400).json({ error: 'name missing' })
     }
     const person = new Person({
-        name: body.name,
-        number: body.number
+        name: name,
+        number: number
     })
     // const randomId = Math.floor(Math.random() * 100000);
     // person.id = randomId;
@@ -116,7 +112,7 @@ app.post('/api/persons', (request, response) => {
 
     person.save().then(savedPerson => {
         response.json(savedPerson)
-    }).catch(error => error.response.data.error)
+    }).catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
