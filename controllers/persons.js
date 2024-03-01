@@ -1,14 +1,14 @@
 const personsRouter = require('express').Router()
 const Person = require('../models/person')
 
-app.get('/', (request, response) => {
+personsRouter.get('/', (request, response) => {
     // response.json(persons)
     Person.find({}).then(persons => {
         response.json(persons)
     })
 })
 
-app.get('/:id', (request, response, next) => {
+personsRouter.get('/:id', (request, response, next) => {
     // const id = Number(request.params.id)
     // const person = persons.find(person => person.id === id)
 
@@ -22,7 +22,7 @@ app.get('/:id', (request, response, next) => {
     }).catch(error => next(error))
 })
 
-app.post('/', (request, response, next) => {
+personsRouter.post('/', (request, response, next) => {
     const { name, number } = request.body
     if (!name) {
         return response.status(400).json({ error: 'name missing' })
@@ -64,7 +64,7 @@ app.post('/', (request, response, next) => {
     }).catch(error => next(error))
 })
 
-app.delete('/:id', (request, response, next) => {
+personsRouter.delete('/:id', (request, response, next) => {
     // const personId = Number(request.params.id)
     // persons = persons.filter(person => person.id !== personId)
 
@@ -79,7 +79,7 @@ app.delete('/:id', (request, response, next) => {
 })
 
 // update persons
-app.put('/:id', (request, response, next) => {
+personsRouter.put('/:id', (request, response, next) => {
     const { name, number } = request.body
 
     // updatePerson(request, person.name, person.number)
@@ -89,7 +89,7 @@ app.put('/:id', (request, response, next) => {
         }).catch(error => next(error))
 })
 
-app.get('/info', (request, response) => {
+personsRouter.get('/info', (request, response) => {
     var currentdate = new Date()
     var datetime = 'Called on: ' + currentdate.getDate() + '/'
     + (currentdate.getMonth()+1)  + '/'
